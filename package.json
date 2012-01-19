@@ -1,0 +1,15 @@
+{
+  "name"              : "multi",
+  "description"       : "Run asynchronous methods sequentially or in parallel",
+  "version"           : "0.1.0",
+  "homepage"          : "http://github.com/derdesign/multi",
+  "repository"        : "http://github.com/derdesign/multi",
+  "author"            : "Ernesto Mendez <der@der-design.com>",
+  "license"           : "MIT",
+  "main"              : "lib/multi",
+  "engines"           : { "node": ">= 0.6.0" },
+  "dependencies"      : {
+    "vows"              : ">= 0.6.0",
+    "underscore"        : ">= 1.2.1"
+  }
+}
