@@ -6,7 +6,7 @@ var vows = require('vows'),
     Multi = require('../'),
     EventEmitter = require('events').EventEmitter;
     
-vows.describe('Asynchronous execution')/*.addBatch({
+vows.describe('Asynchronous execution').addBatch({
   
   'Running with successful callbacks': {
     
@@ -23,13 +23,17 @@ vows.describe('Asynchronous execution')/*.addBatch({
       });
       return promise;
     },
-    
+
+    'No errors should be reported': function(topic) {
+      assert.isNull(topic.err);
+    },
+  
     'Results should be an array': function(topic) {
       assert.isArray(topic.results);
     },
     
-    'No errors should be returned': function(topic) {
-      assert.isNull(topic.err);
+    'Results.length should match method calls': function(topic) {
+      assert.equal(topic.results.length, 4);
     },
     
     'Callbacks run sequentially': function(topic) {
@@ -41,14 +45,11 @@ vows.describe('Asynchronous execution')/*.addBatch({
       var expected = [].concat(topic.order);
       expected.push(5);
       assert.deepEqual(expected, topic.results);
-    },
-    
-    'Results length should match method calls': function(topic) {
-      assert.equal(topic.results.length, 4);
     }
+
     
   }
-})*/.addBatch({
+}).addBatch({
   
   'Running with errors': {
     

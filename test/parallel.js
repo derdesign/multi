@@ -25,6 +25,18 @@ vows.describe('Parallel Execution').addBatch({
       return promise;
     },
     
+    'No errors should be reported': function(topic) {
+      assert.isNull(topic.err);
+    },
+    
+    'Results should be an array': function(topic) {
+      assert.isArray(topic.results);
+    },
+    
+    'Results.length should match method calls': function(topic) {
+      assert.equal(topic.results.length, 3);
+    },    
+    
     'Callbacks run simultaneously': function(topic) {
       var o = topic.order,
           r = topic.results;
@@ -34,22 +46,11 @@ vows.describe('Parallel Execution').addBatch({
       assert.isTrue(cond1 && cond2 && cond3);
     },
     
-    'Results should be an array': function(topic) {
-      assert.isArray(topic.results);
-    },
-    
     'Results are pushed in order of completion': function(topic) {
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
       assert.deepEqual(expectedOrder, topic.results);
-    },
-    
-    'Results length should match method calls': function(topic) {
-      assert.equal(topic.results.length, 3);
-    },
-    
-    'No errors should be returned': function(topic) {
-      assert.isNull(topic.err);
     }
+
   }
   
 }).addBatch({
@@ -58,18 +59,39 @@ vows.describe('Parallel Execution').addBatch({
     
     topic: function() {
       var promise = new EventEmitter(),
+          order = [],
           multi = new Multi(context, {parallel: true});
-      multi.randSleep(null);
+      multi.randSleep(order);
       multi.error(5);
-      multi.randSleep(null);
+      multi.randSleep(order);
       multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results});
+        promise.emit('success', {err: err, results: results, order: order});
       });
       return promise;
     },
     
-    'An array of errors should be reported': function(topic) {
+    'Errors should be an array': function(topic) {
       assert.isArray(topic.err);
+    },
+    
+    'Results should be an array': function(topic) {
+      assert.isArray(topic.results);
+    },
+    
+    'Errors.length should match method calls': function(topic) {
+      assert.equal(topic.err.length, 3);
+    },
+    
+    'Results.length should match method calls': function(topic) {
+      assert.equal(topic.results.length, 3);
+    },
+    
+    'Successful callbacks should report null as error': function(topic) {
+      var errors = topic.err, counter = 0;
+      for (var i=0; i < errors.length; i++) {
+        if (errors[i] === null) counter++;
+      }
+      assert.equal(counter, 2);
     },
     
     'The reported error matches the actual error': function(topic) {
@@ -81,9 +103,15 @@ vows.describe('Parallel Execution').addBatch({
       assert.isTrue(err instanceof Error);
     },
     
-    'The Errors array length should match method calls': function(topic) {
-      assert.equal(topic.err.length, 3);
+    'Results are correctly reported': function(topic) {
+      var expected = [null].concat(topic.order),
+          r = topic.results;
+      var cond1 = expected.indexOf(r[0]) >= 0,
+          cond2 = expected.indexOf(r[1]) >= 0,
+          cond3 = expected.indexOf(r[2]) >= 0;
+      assert.isTrue(cond1 && cond2 && cond3);
     }
+
   }
 }).addBatch({
   
@@ -104,19 +132,23 @@ vows.describe('Parallel Execution').addBatch({
       return promise;
     },
     
-    'Errors & Results should be arrays': function(topic) {
-      assert.isTrue(util.isArray(topic.err) && util.isArray(topic.results));
+    'Errors should be an array': function(topic) {
+      assert.isArray(topic.err);
     },
     
-    'Errors length should get as far as errored callback': function(topic) {
+    'Results should be an array': function(topic) {
+      assert.isArray(topic.results);
+    },
+    
+    'Errors.length should match method calls': function(topic) {
       assert.equal(topic.err.length, 3);
     },
     
-    'Results length should not match method calls': function(topic) {
+    'Results.length should match method calls': function(topic) {
      assert.notEqual(topic.results.length, 5);
     },
     
-    'Last element in Errors array should be an error': function(topic) {
+    'Last element in Errors array should be the error': function(topic) {
       assert.isTrue(topic.err[2] instanceof Error);
     }
   }
