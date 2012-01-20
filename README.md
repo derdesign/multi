@@ -49,17 +49,15 @@ mfs.exec(function(err, results) {
 });
 ```
 
+There are several examples provided on the various uses of Multi, available in the `examples/` directory.
+
 ## Options
 
-The following parameters are accepted in the Multi configuration object (second parameter of constructor):
+The following options are accepted in the Multi configuration object (second parameter of constructor):
 
-**parallel**: Determines if the methods will run in parallel. Defaults to `false`.
+**parallel**: Determines if the methods will run in parallel. Defaults to `false`
 
-**interrupt**: Interrupts execution if an error is encountered. Defaults to `false`.
-
-## Examples
-
-There are several examples provided on the various uses of Multi, available in the `examples/` directory.
+**interrupt**: Interrupts execution if an error is encountered. Defaults to `false`
 
 ## License
 
