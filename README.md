@@ -2,10 +2,10 @@
 
 Run asynchronous methods sequentially or in parallel
 
-## Status: preparing for release
+## Status: Preparing for release
 
 ## License
 
-Copyright (c) 2012, Ernesto Mendez. (MIT License)
+Copyright (c) 2012, Ernesto Méndez. (MIT License)
 
-See LICENSE for more info.
+See [LICENSE](https://github.com/derdesign/multi/blob/master/LICENSE) for more info.
