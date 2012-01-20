@@ -5,10 +5,10 @@ var vows = require('vows'),
     Multi = require('../'),
     EventEmitter = require('events').EventEmitter;
     
-var sortFunc = function(a,b) { return a-b; } 
+var sortFunc = function(a,b) { return a-b; }
     
 vows.describe('Parallel Execution').addBatch({
-  '': {
+  'Running with Defaults': {
     topic: function() {
       var promise = new EventEmitter(),
           order = [],
@@ -22,7 +22,12 @@ vows.describe('Parallel Execution').addBatch({
       return promise;
     },
     'Callbacks run simultaneously': function(topic) {
-      assert.notDeepEqual(topic.order, topic.results);
+      var o = topic.order,
+          r = topic.results;
+      var cond1 = (r.indexOf(o[0]) >= 0),
+          cond2 = (r.indexOf(o[1]) >= 0),
+          cond3 = (r.indexOf(o[2]) >= 0);
+      assert.isTrue(cond1 && cond2 && cond3);
     },
     'Results should be an array': function(topic) {
       assert.isArray(topic.results);
@@ -40,3 +45,11 @@ vows.describe('Parallel Execution').addBatch({
   }
   
 }).export(module);
+
+// Parallel execution with errors
+// - Callbacks run simultaneously
+// - An array of errors should be reported
+// - ...
+
+// Parallel execution with interrupt
+// - Results should be incomplete
