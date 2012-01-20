@@ -1,6 +1,6 @@
 # Multi
 
-Run asynchronous methods sequentially or in parallel
+Run asynchronous methods sequentially or in parallel.
 
 ## About
 
@@ -20,9 +20,7 @@ To install multi's dependencies:
 
     npm install
     
-or
-
-    make deps
+You can also install the dependencies with `make deps`.
     
 To run the test suites:
 
@@ -33,7 +31,7 @@ To run the test suites:
 Multi works with objects that have asynchronous methods. It creates a wrapper with the same methods as the original,
 which can be run either in sequence or in parallel.
 
-The following example wraps the `fs` module in a Multi object:
+The following example wraps the `fs` module in a Multi object, and performs some operations:
 
 ```javascript
 var fs = require('fs'),
