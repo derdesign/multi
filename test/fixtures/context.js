@@ -4,12 +4,11 @@
 module.exports = {
     
   // Runs a random callback
-  rand: function(callback) {
-    var t = Math.ceil(Math.random()*2000);
-    runOrder.push(t);
+  rand: function(arr, callback) {
+    var t = Math.ceil(Math.random()*500);
+    arr.push(t);
     setTimeout(function() {
-      finishOrder.push(t);
-      callback(null, 'Finished: ' + t);
+      callback(null, t);
     }, t);
   },
   
@@ -24,5 +23,3 @@ module.exports = {
   }
 
 }
-  
-module.exports = parallelTest;
