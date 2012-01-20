@@ -99,7 +99,7 @@ vows.describe('Parallel Execution').addBatch({
         err = errors[i];
         if (err instanceof Error) break;
       }
-      assert.isTrue(err instanceof Error);
+      assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
     },
     
     'Results are correctly reported': function(topic) {
@@ -148,7 +148,8 @@ vows.describe('Parallel Execution').addBatch({
     },
     
     'Last element in Errors array should be the error': function(topic) {
-      assert.isTrue(topic.err[2] instanceof Error);
+      var err = topic.err[2];
+      assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
     }
     
   }
