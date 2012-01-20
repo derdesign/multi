@@ -6,6 +6,6 @@ Run asynchronous methods sequentially or in parallel
 
 ## License
 
-Copyright (c) 2012, Ernesto Méndez. (MIT License)
+Copyright &copy; 2012, Ernesto Méndez. (MIT License)
 
 See [LICENSE](https://github.com/derdesign/multi/blob/master/LICENSE) for more info.
