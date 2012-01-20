@@ -7,7 +7,7 @@ var vows = require('vows'),
     
 var sortFunc = function(a,b) { return a-b; }
     
-vows.describe('Parallel Execution')/*.addBatch({
+vows.describe('Parallel Execution').addBatch({
   'Running with successful callbacks': {
     topic: function() {
       var promise = new EventEmitter(),
@@ -44,7 +44,7 @@ vows.describe('Parallel Execution')/*.addBatch({
     }
   }
   
-})*/.addBatch({
+}).addBatch({
   'Running with errors': {
     topic: function() {
       var promise = new EventEmitter(),
@@ -63,6 +63,9 @@ vows.describe('Parallel Execution')/*.addBatch({
     'The reported error matches the actual error': function(topic) {
       var err = topic.err[0];
       assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+    },
+    'The Errors array length should match method calls': function(topic) {
+      assert.equal(topic.err.length, 3);
     }
   }
 })/*.addBatch({

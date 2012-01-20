@@ -5,7 +5,7 @@ module.exports = {
     
   // Runs a random callback
   rand: function(arr, callback) {
-    var t = Math.ceil(Math.random()*1000);
+    var t = Math.ceil(Math.random()*10);
     if (arr) arr.push(t);
     setTimeout(function() {
       callback(null, t);
