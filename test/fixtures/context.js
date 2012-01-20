@@ -6,7 +6,7 @@ module.exports = {
   // Runs a random callback
   rand: function(arr, callback) {
     var t = Math.ceil(Math.random()*1000);
-    arr.push(t);
+    if (arr) arr.push(t);
     setTimeout(function() {
       callback(null, t);
     }, t);
@@ -18,7 +18,7 @@ module.exports = {
   },
   
   // Callback returning a result
-  result: function(a, b, callback) {
+  sum: function(a, b, callback) {
     callback(null, a+b);
   }
 

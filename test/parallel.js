@@ -7,8 +7,8 @@ var vows = require('vows'),
     
 var sortFunc = function(a,b) { return a-b; }
     
-vows.describe('Parallel Execution').addBatch({
-  'Running with Defaults': {
+vows.describe('Parallel Execution')/*.addBatch({
+  'Running with successful callbacks': {
     topic: function() {
       var promise = new EventEmitter(),
           order = [],
@@ -44,12 +44,34 @@ vows.describe('Parallel Execution').addBatch({
     }
   }
   
-}).export(module);
-
-// Parallel execution with errors
-// - Callbacks run simultaneously
-// - An array of errors should be reported
-// - ...
-
-// Parallel execution with interrupt
-// - Results should be incomplete
+})*/.addBatch({
+  'Running with errors': {
+    topic: function() {
+      var promise = new EventEmitter(),
+          multi = new Multi(context, {parallel: true});
+      multi.rand(null);
+      multi.error();
+      multi.rand(null);
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results});
+      });
+      return promise;
+    },
+    'An array of errors should be reported': function(topic) {
+      assert.isArray(topic.err);
+    },
+    'The reported error matches the actual error': function(topic) {
+      var err = topic.err[0];
+      assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+    }
+  }
+})/*.addBatch({
+  'Running with interrupt on error': {
+    topic: function() {
+      
+    },
+    'Results should be incomplete': function(topic) {
+      
+    }
+  }
+})*/.export(module);
