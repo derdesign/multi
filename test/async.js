@@ -1,14 +1,27 @@
 
-// Asynchronous execution
-// - Callbacks should run asynchronously in sequence
-// - Results are pushed in the order of completion
-// - No errors should be reported (null)
+var vows = require('vows'),
+    assert = require('assert'),
+    util = require('util'),
+    context = require('./fixtures/context'),
+    Multi = require('../'),
+    EventEmitter = require('events').EventEmitter;
+    
+vows.describe('Asynchronous execution')
+
+// Running with successful callbacks
+// - Callbacks run simultaneously
+// - Results should be an array
+// - Results are pushed in order of completion
 // - Results length should match method calls
+// - No errors should be returned
 
-// Asynchronous execution with errors
+// Running with errors
 // - An array of errors should be reported
-// - Results array should contain incomplete values
-// ...
+// - The reported error matches the actual error
+// - The Errors array length should match method calls
 
-// Asynchronous execution with interrupt
-// - Results should be incomplete
+// Running with interrupt on error
+// - Errors & Results should be arrays
+// - Errors length should get as far as errored callback
+// - Results length should not match method calls
+// - Last element in Errors array should be an error
