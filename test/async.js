@@ -47,7 +47,6 @@ vows.describe('Asynchronous execution').addBatch({
       assert.deepEqual(expected, topic.results);
     }
 
-    
   }
 }).addBatch({
   
@@ -98,13 +97,48 @@ vows.describe('Asynchronous execution').addBatch({
       var expected = [1, 2, null].concat(topic.order);
       assert.deepEqual(expected, topic.results);
     }
-    
-  }
-  
-}).export(module);
 
-// Running with interrupt on error
-// - Errors & Results should be arrays
-// - Errors length should get as far as errored callback
-// - Results length should not match method calls
-// - Last element in Errors array should be an error
+  }
+}).addBatch({
+
+  'Running with interrupt on error': {
+
+    topic: function() {
+      var promise = new EventEmitter(),
+          order = [],
+          multi = new Multi(context, {parallel: false, interrupt: true});
+      multi.sum(1,2);
+      multi.randSleep(order);
+      multi.randSleep(order);
+      multi.error(1); // Error happens here
+      multi.sum(2,2);
+      multi.sum(3,2);
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order});
+      });
+      return promise;
+    },
+
+    'Errors should be an array': function(topic) {
+      assert.isArray(topic.err);
+    },
+
+    'Results should be an array': function(topic) {
+      assert.isArray(topic.results);
+    },
+
+    'Errors.length should match method calls until error': function(topic) {
+      assert.equal(topic.err.length, 4); // Error happens on 4th callback
+    },
+
+    'Results.length should match method calls until error': function(topic) {
+     assert.equal(topic.results.length, 4); // Error happens on 4th callback
+    },
+
+    'Last element in Errors array should be the error': function(topic) {
+      var err = [].concat(topic.err).pop();
+      assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+    }
+
+  }
+}).export(module);

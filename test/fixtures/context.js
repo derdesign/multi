@@ -1,6 +1,8 @@
 
 /* Multi Context */
 
+var util = require('util');
+
 module.exports = {
   
   // Runs a callback after a specific delay
@@ -13,7 +15,7 @@ module.exports = {
   // Runs a callback at a random time
   randSleep: function(arr, callback) {
     var t = Math.ceil(Math.random()*10);
-    if (arr) arr.push(t);
+    if (util.isArray(arr)) arr.push(t);
     setTimeout(function() {
       callback(null, t);
     }, t);

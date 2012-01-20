@@ -50,9 +50,8 @@ vows.describe('Parallel Execution').addBatch({
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
       assert.deepEqual(expectedOrder, topic.results);
     }
-
+    
   }
-  
 }).addBatch({
   
   'Running with errors': {
@@ -140,16 +139,17 @@ vows.describe('Parallel Execution').addBatch({
       assert.isArray(topic.results);
     },
     
-    'Errors.length should match method calls': function(topic) {
+    'Errors.length should match method calls until error': function(topic) {
       assert.equal(topic.err.length, 3);
     },
     
-    'Results.length should match method calls': function(topic) {
+    'Results.length should match method calls until error': function(topic) {
      assert.notEqual(topic.results.length, 5);
     },
     
     'Last element in Errors array should be the error': function(topic) {
       assert.isTrue(topic.err[2] instanceof Error);
     }
+    
   }
 }).export(module);
