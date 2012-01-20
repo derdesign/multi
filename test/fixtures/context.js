@@ -31,6 +31,6 @@ module.exports = {
   // Callback returning a result
   sum: function(a, b, callback) {
     callback(null, a+b);
-  },
+  }
   
 }
