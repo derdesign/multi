@@ -6,5 +6,5 @@ default:
 deps:
 		@npm install
 
-test:
-		@./node_modules/vows/bin/vows --spec ./tests/*.js
+tests:
+		@./node_modules/vows/bin/vows --spec ./test/*.js
