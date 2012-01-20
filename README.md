@@ -36,19 +36,19 @@ which can be run either in sequence or in parallel.
 The following example wraps the `fs` module in a Multi object:
 
 ```javascript
-  var fs = require('fs'),
-      Multi = require('multi');
-    
-  var mfs = new Multi(fs);
+var fs = require('fs'),
+    Multi = require('multi');
+  
+var mfs = new Multi(fs);
 
-  mfs.readFile('./assets/hello.html', 'utf-8');
-  mfs.readdir('./assets/');
-  mfs.readFile('./assets/style.css', 'utf-8');
-  mfs.lstat('./assets/text.txt');
+mfs.readFile('./assets/hello.html', 'utf-8');
+mfs.readdir('./assets/');
+mfs.readFile('./assets/style.css', 'utf-8');
+mfs.lstat('./assets/text.txt');
 
-  mfs.exec(function(err, results) {
-    console.log([err, results]);
-  });
+mfs.exec(function(err, results) {
+  console.log([err, results]);
+});
 ```
 
 ## Examples
