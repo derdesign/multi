@@ -24,18 +24,27 @@ vows.describe('Multi Test Suite').addBatch({
     'Callbacks run simultaneously': function(topic) {
       assert.notDeepEqual(topic.order, topic.results);
     },
+    'Results should be an array': function(topic) {
+      assert.isArray(topic.results);
+    },
     'Results are pushed in order of completion': function(topic) {
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
       assert.deepEqual(expectedOrder, topic.results);
+    },
+    'Results length should match method calls': function(topic) {
+      assert.equal(topic.results.length, 3);
+    },
+    'No errors should be returned': function(topic) {
+      assert.isNull(topic.err);
     }
   }
   
   // Parallel execution
   // * Callbacks run simultaneously
-  // - Results are pushed in order of completion
-  // - No errors should be reported (null)
-  // - Results should be an array
-  // - Results length should match method calls
+  // * Results should be an array
+  // * Results are pushed in order of completion
+  // * No errors should be reported (null)
+  // * Results length should match method calls
   
   // Parallel execution with errors
   // - Callbacks are run simultaneously
