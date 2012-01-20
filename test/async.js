@@ -6,14 +6,36 @@ var vows = require('vows'),
     Multi = require('../'),
     EventEmitter = require('events').EventEmitter;
     
-vows.describe('Asynchronous execution')
-
-// Running with successful callbacks
-// - Callbacks run simultaneously
-// - Results should be an array
-// - Results are pushed in order of completion
-// - Results length should match method calls
-// - No errors should be returned
+vows.describe('Asynchronous execution').addBatch({
+  
+  'Running with successful callbacks': {
+    
+    topic: function() {
+      
+    },
+    
+    'Callbacks run sequentially': function(topic) {
+      
+    },
+    
+    'Results should be an array': function(topic) {
+      
+    },
+    
+    'Results are pushed in order of completion': function(topic) {
+      
+    },
+    
+    'Results length should match method calls': function(topic) {
+      
+    },
+    
+    'No errors should be returned': function(topic) {
+      
+    }
+    
+  }
+});
 
 // Running with errors
 // - An array of errors should be reported
