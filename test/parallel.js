@@ -7,15 +7,15 @@ var vows = require('vows'),
     
 var sortFunc = function(a,b) { return a-b; }
     
-vows.describe('Parallel Execution').addBatch({
+vows.describe('Parallel Execution')/*.addBatch({
   'Running with successful callbacks': {
     topic: function() {
       var promise = new EventEmitter(),
           order = [],
           multi = new Multi(context, {parallel: true});
-      multi.rand(order);
-      multi.rand(order);
-      multi.rand(order);
+      multi.randSleep(order);
+      multi.randSleep(order);
+      multi.randSleep(order);
       multi.exec(function(err, results) {
         promise.emit('success', {err: err, results: results, order: order})
       });
@@ -49,9 +49,9 @@ vows.describe('Parallel Execution').addBatch({
     topic: function() {
       var promise = new EventEmitter(),
           multi = new Multi(context, {parallel: true});
-      multi.rand(null);
-      multi.error();
-      multi.rand(null);
+      multi.randSleep(null);
+      multi.error(5);
+      multi.randSleep(null);
       multi.exec(function(err, results) {
         promise.emit('success', {err: err, results: results});
       });
@@ -68,13 +68,24 @@ vows.describe('Parallel Execution').addBatch({
       assert.equal(topic.err.length, 3);
     }
   }
-})/*.addBatch({
+})*/.addBatch({
   'Running with interrupt on error': {
     topic: function() {
-      
+      var promise = new EventEmitter(),
+          multi = new Multi(context, {parallel: true, interrupt: true});
+      // Callbacks run simultaneously, but 3 & 2
+      multi.sleep(5);
+      multi.sleep(4);
+      multi.error(3);
+      multi.sleep(2);
+      multi.sleep(1);
+      multi.exec(function(err, results) {
+        console.log([err, results]);
+      });
+      return promise;
     },
     'Results should be incomplete': function(topic) {
       
     }
   }
-})*/.export(module);
+}).export(module);
