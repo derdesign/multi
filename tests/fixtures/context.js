@@ -6,7 +6,7 @@ module.exports = {
   // Runs a callback after a specific delay
   sleep: function(delay, callback) {
     setTimeout(function() {
-      callback.call(null, delay);
+      callback(null, delay);
     }, delay);
   },
   
