@@ -51,7 +51,7 @@ mfs.exec(function(err, results) {
 
 ## Options
 
-The following configuration options are provided as the second parameter of the multi constructor:
+The following parameters are accepted in the Multi configuration object (second parameter of constructor):
 
 **parallel**: Determines if the methods will run in parallel. Defaults to `false`.
 
