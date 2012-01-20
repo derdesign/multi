@@ -1,13 +1,14 @@
 
 var vows = require('vows'),
     assert = require('assert'),
+    util = require('util'),
     context = require('./fixtures/context'),
     Multi = require('../'),
     EventEmitter = require('events').EventEmitter;
     
 var sortFunc = function(a,b) { return a-b; }
     
-vows.describe('Parallel Execution')/*.addBatch({
+vows.describe('Parallel Execution').addBatch({
   'Running with successful callbacks': {
     topic: function() {
       var promise = new EventEmitter(),
@@ -61,14 +62,18 @@ vows.describe('Parallel Execution')/*.addBatch({
       assert.isArray(topic.err);
     },
     'The reported error matches the actual error': function(topic) {
-      var err = topic.err[0];
-      assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+      var errors = [].concat(topic.err);
+      for (var err,i=0; i < errors.length; i++) {
+        err = errors[i];
+        if (err instanceof Error) break;
+      }
+      assert.isTrue(err instanceof Error);
     },
     'The Errors array length should match method calls': function(topic) {
       assert.equal(topic.err.length, 3);
     }
   }
-})*/.addBatch({
+}).addBatch({
   'Running with interrupt on error': {
     topic: function() {
       var promise = new EventEmitter(),
@@ -76,16 +81,25 @@ vows.describe('Parallel Execution')/*.addBatch({
       // Callbacks run simultaneously, but 3 & 2
       multi.sleep(5);
       multi.sleep(4);
-      multi.error(3);
-      multi.sleep(2);
-      multi.sleep(1);
+      multi.error(3); // Breaks here
+      multi.sleep(2); // Runs second
+      multi.sleep(1); // Runs first
       multi.exec(function(err, results) {
-        console.log([err, results]);
+        promise.emit('success', {err: err, results: results})
       });
       return promise;
     },
-    'Results should be incomplete': function(topic) {
-      
+    'Errors & Results should be arrays': function(topic) {
+      assert.isTrue(util.isArray(topic.err) && util.isArray(topic.results));
+    },
+    'Errors length should get as far as errored callback': function(topic) {
+      assert.equal(topic.err.length, 3);
+    },
+    'Results length should not match method calls': function(topic) {
+     assert.notEqual(topic.results.length, 5);
+    },
+    'Last element in Errors array should be an error': function(topic) {
+      assert.isTrue(topic.err[2] instanceof Error);
     }
   }
 }).export(module);
