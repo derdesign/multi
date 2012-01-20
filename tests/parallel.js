@@ -9,7 +9,9 @@ var vows = require('vows'),
 var sortFunc = function(a,b) { return a-b; }
     
 vows.describe('Parallel Execution').addBatch({
+  
   'Running with successful callbacks': {
+    
     topic: function() {
       var promise = new EventEmitter(),
           order = [],
@@ -22,6 +24,7 @@ vows.describe('Parallel Execution').addBatch({
       });
       return promise;
     },
+    
     'Callbacks run simultaneously': function(topic) {
       var o = topic.order,
           r = topic.results;
@@ -30,23 +33,29 @@ vows.describe('Parallel Execution').addBatch({
           cond3 = (r.indexOf(o[2]) >= 0);
       assert.isTrue(cond1 && cond2 && cond3);
     },
+    
     'Results should be an array': function(topic) {
       assert.isArray(topic.results);
     },
+    
     'Results are pushed in order of completion': function(topic) {
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
       assert.deepEqual(expectedOrder, topic.results);
     },
+    
     'Results length should match method calls': function(topic) {
       assert.equal(topic.results.length, 3);
     },
+    
     'No errors should be returned': function(topic) {
       assert.isNull(topic.err);
     }
   }
   
 }).addBatch({
+  
   'Running with errors': {
+    
     topic: function() {
       var promise = new EventEmitter(),
           multi = new Multi(context, {parallel: true});
@@ -58,9 +67,11 @@ vows.describe('Parallel Execution').addBatch({
       });
       return promise;
     },
+    
     'An array of errors should be reported': function(topic) {
       assert.isArray(topic.err);
     },
+    
     'The reported error matches the actual error': function(topic) {
       var errors = [].concat(topic.err);
       for (var err,i=0; i < errors.length; i++) {
@@ -69,12 +80,15 @@ vows.describe('Parallel Execution').addBatch({
       }
       assert.isTrue(err instanceof Error);
     },
+    
     'The Errors array length should match method calls': function(topic) {
       assert.equal(topic.err.length, 3);
     }
   }
 }).addBatch({
+  
   'Running with interrupt on error': {
+    
     topic: function() {
       var promise = new EventEmitter(),
           multi = new Multi(context, {parallel: true, interrupt: true});
@@ -89,15 +103,19 @@ vows.describe('Parallel Execution').addBatch({
       });
       return promise;
     },
+    
     'Errors & Results should be arrays': function(topic) {
       assert.isTrue(util.isArray(topic.err) && util.isArray(topic.results));
     },
+    
     'Errors length should get as far as errored callback': function(topic) {
       assert.equal(topic.err.length, 3);
     },
+    
     'Results length should not match method calls': function(topic) {
      assert.notEqual(topic.results.length, 5);
     },
+    
     'Last element in Errors array should be an error': function(topic) {
       assert.isTrue(topic.err[2] instanceof Error);
     }
