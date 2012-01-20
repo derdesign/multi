@@ -49,6 +49,13 @@ mfs.exec(function(err, results) {
 });
 ```
 
+## Options
+
+The following configuration options are provided as the second parameter of the multi constructor:
+
+**parallel**: Determines if the methods will run in parallel. Defaults to `false`.
+**interrupt**: Interrupts execution if an error is encountered. Defaults to `false`.
+
 ## Examples
 
 There are several examples provided on the various uses of Multi, available in the `examples/` directory.
