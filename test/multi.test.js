@@ -4,14 +4,14 @@ var vows = require('vows'),
     EventEmitter = require('events').EventEmitter;
     
 vows.describe('Multi Test Suite').addBatch({
-  'Should run in parallel': {
+  'When running in parallel': {
     topic: function() {
       var promise = new EventEmitter(),
-          parallelTest = require('./fixtures/parallel.js');
+          parallelTest = require('./fixtures/parallel');
       parallelTest(promise);
       return promise;
     },
-    'Is true': function(topic) {
+    'All callbacks run at the same time': function(topic) {
       assert.isTrue(topic);
     }
   }
