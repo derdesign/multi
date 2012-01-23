@@ -6,5 +6,7 @@ default:
 deps:
 		@npm install
 
-tests:
+test:
 		@./node_modules/vows/bin/vows --spec ./test/*.js
+
+.PHONY: test
