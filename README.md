@@ -24,7 +24,7 @@ You can also install the dependencies with `make deps`.
     
 To run the test suites:
 
-    make tests
+    make test
     
 ## Usage
 
