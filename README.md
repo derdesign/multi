@@ -59,6 +59,8 @@ The following options are accepted in the Multi configuration object (second par
 
 **interrupt**: Interrupts execution if an error is encountered. Defaults to `false`
 
+**flush**: Clears the call stack after running `exec`. Defaults to `true`
+
 ## License
 
 Copyright &copy; 2012, Ernesto Méndez. (MIT License)
