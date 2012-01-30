@@ -1,0 +1,13 @@
+language: node_js
+
+node_js:
+  - 0.6
+
+before_script:
+  - "make deps"
+
+script:
+  - "make test"
+
+notifications:
+  email: false

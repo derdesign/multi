@@ -1,4 +1,4 @@
-# Multi
+# Multi [![Build Status](https://secure.travis-ci.org/derdesign/multi.png)](http://travis-ci.org/derdesign/multi)
 
 Run asynchronous methods sequentially or in parallel.
 
