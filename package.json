@@ -1,7 +1,7 @@
 {
   "name"              : "multi",
   "description"       : "Run asynchronous methods sequentially or in parallel",
-  "version"           : "0.1.0",
+  "version"           : "0.1.1",
   "homepage"          : "http://github.com/derdesign/multi",
   "repository"        : "http://github.com/derdesign/multi",
   "author"            : "Ernesto Mendez <der@der-design.com>",
