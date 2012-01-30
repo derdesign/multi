@@ -1,7 +1,14 @@
 
 /* Multi Context */
 
-var util = require('util');
+var util = require('util'),
+    slice = Array.prototype.slice;
+
+console.exit = function() {
+  var args = slice.call(arguments, 0);
+  console.dir.apply(null, args);
+  process.exit();
+}
 
 module.exports = {
   
