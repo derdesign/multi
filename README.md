@@ -61,6 +61,14 @@ The following options are accepted in the Multi configuration object (second par
 
 **flush**: Clears the call stack after running `exec`. Defaults to `true`
 
+## Events
+
+Multi emits the following events:
+
+**pre_exec**: Before running the call stack
+
+**post_exec**: Upon completion, before calling the `exec` callback
+
 ## License
 
 Copyright &copy; 2012, Ernesto Méndez. (MIT License)
