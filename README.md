@@ -73,4 +73,4 @@ Multi emits the following events:
 
 Copyright &copy; 2012, Ernesto Méndez. (MIT License)
 
-See [LICENSE](https://github.com/derdesign/multi/blob/master/LICENSE) for more info.
+See [LICENSE](https://github.com/corejs/multi/blob/master/LICENSE) for more info.
