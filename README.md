@@ -1,4 +1,4 @@
-# Multi [![Build Status](https://secure.travis-ci.org/corejs/multi.png)](http://travis-ci.org/corejs/multi)
+# Multi [![Build Status](https://secure.travis-ci.org/derdesign/multi.png)](http://travis-ci.org/derdesign/multi)
 
 Run asynchronous methods sequentially or in parallel.
 
@@ -73,4 +73,4 @@ Multi emits the following events:
 
 Copyright &copy; 2012, Ernesto Méndez. (MIT License)
 
-See [LICENSE](https://github.com/corejs/multi/blob/master/LICENSE) for more info.
+See [LICENSE](https://github.com/derdesign/multi/blob/master/LICENSE) for more info.
