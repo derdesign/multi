@@ -11,16 +11,28 @@ vows.describe('Asynchronous execution').addBatch({
   'Running with successful callbacks': {
     
     topic: function() {
-      var promise = new EventEmitter(),
-          order = [],
-          multi = new Multi(context); // parallel: false, interrupt: false
+      
+      var order = [], each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context); // parallel: false, interrupt: false
+
       multi.randSleep(order);
       multi.randSleep(order);
       multi.randSleep(order);
       multi.sum(2,3);
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results, order: order});
+
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order, each: each});
+      });
+
       return promise;
     },
 
@@ -45,6 +57,14 @@ vows.describe('Asynchronous execution').addBatch({
       var expected = [].concat(topic.order);
       expected.push(5);
       assert.deepEqual(expected, topic.results);
+    },
+    
+    'The each event provides the right information': function(topic) {
+      assert.equal(topic.each.length, 4);
+      assert.isNull(topic.each[0].err);
+      assert.isNull(topic.each[1].err);
+      assert.isNull(topic.each[2].err);
+      assert.isNull(topic.each[3].err);
     }
 
   }
