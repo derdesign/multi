@@ -40,9 +40,14 @@ vows.describe('Multi Events').addBatch({
     'Has EventEmitter methods': function() {
       for (var method in emitter) {
         if (emitter[method] instanceof Function) {
+          if (method == 'addVow') continue;
           assert.isFunction(multi[method]);
         }
       }
+    }, 
+    
+    'Ensures unique EventEmitter per instance': function() {
+      assert.isUndefined(Multi.super_);
     }
     
   }
