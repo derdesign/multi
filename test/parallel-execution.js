@@ -13,16 +13,28 @@ vows.describe('Parallel Execution').addBatch({
   'Running with successful callbacks': {
     
     topic: function() {
-      var promise = new EventEmitter(),
-          order = [],
-          multi = new Multi(context, {parallel: true});
+      var order = [], each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context, {parallel: true});
+
       multi.randSleep(order);
       multi.randSleep(order);
       multi.randSleep(order);
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results, order: order})
+      
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order, each: each})
+      });
+      
       return promise;
+
     },
     
     'No errors should be reported': function(topic) {
@@ -49,6 +61,13 @@ vows.describe('Parallel Execution').addBatch({
     'Results are pushed in order of completion': function(topic) {
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
       assert.deepEqual(expectedOrder.sort(), topic.results.sort());
+    },
+    
+    'The each event provides the right information': function(topic) {
+      // assert.equal(topic.each.length, 3);
+      // assert.isNull(topic.each[0].err);
+      // assert.isNull(topic.each[1].err);
+      // assert.isNull(topic.each[2].err);
     }
     
   }
@@ -57,16 +76,29 @@ vows.describe('Parallel Execution').addBatch({
   'Running with errors': {
     
     topic: function() {
-      var promise = new EventEmitter(),
-          order = [],
-          multi = new Multi(context, {parallel: true});
+      
+      var order = [], each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context, {parallel: true});
+      
       multi.randSleep(order);
       multi.error(5);
       multi.randSleep(order);
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results, order: order});
+      
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order, each: each});
+      });
+      
       return promise;
+
     },
     
     'Errors should be an array': function(topic) {
@@ -109,6 +141,15 @@ vows.describe('Parallel Execution').addBatch({
           cond2 = expected.indexOf(r[1]) >= 0,
           cond3 = expected.indexOf(r[2]) >= 0;
       assert.isTrue(cond1 && cond2 && cond3);
+    },
+    
+    'The each event provides the right information': function(topic) {
+      var each = topic.each;
+      assert.equal(each.length, 3);
+      for (var i=0,errCount=0,len=each.length; i < len; i++) {
+        if (each[i].err) errCount++;
+      }
+      assert.equal(errCount, 1);
     }
 
   }
@@ -117,18 +158,32 @@ vows.describe('Parallel Execution').addBatch({
   'Running with interrupt on error': {
     
     topic: function() {
-      var promise = new EventEmitter(),
-          multi = new Multi(context, {parallel: true, interrupt: true});
+      
+      var each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context, {parallel: true, interrupt: true});
+          
       // Callbacks run simultaneously, but 3 & 2
       multi.sleep(50);
       multi.sleep(40);
       multi.error(30); // Breaks here
       multi.sleep(20); // Runs second
       multi.sleep(10); // Runs first
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results})
+      
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, each: each})
+      });
+      
       return promise;
+
     },
     
     'Errors should be an array': function(topic) {
@@ -151,6 +206,13 @@ vows.describe('Parallel Execution').addBatch({
     'Last element in Errors array should be the error': function(topic) {
       var err = topic.err[2];
       assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+    },
+    
+    'The each event provides the right information': function(topic) {
+      assert.equal(topic.each.length, 2);
+      for (var i=0,len=topic.each.length; i < len; i++) {
+        assert.isNull(topic.each[i].err);
+      }
     }
     
   }

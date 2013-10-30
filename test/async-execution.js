@@ -53,18 +53,31 @@ vows.describe('Asynchronous execution').addBatch({
   'Running with errors': {
     
     topic: function() {
-      var promise = new EventEmitter(),
-          order = [],
-          multi = new Multi(context, {parallel: false, interrupt: false});
+      
+      var order = [], each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context, {parallel: false, interrupt: false});
+      
       multi.sleep(1);
       multi.sleep(2);
       multi.error(3);
       multi.randSleep(order);
       multi.randSleep(order);
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results, order: order});
+      
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order, each: each});
+      });
+      
       return promise;
+
     },
     
     'Errors should be an array': function(topic) {
@@ -96,6 +109,16 @@ vows.describe('Asynchronous execution').addBatch({
       // Errored callbacks report null
       var expected = [1, 2, null].concat(topic.order);
       assert.deepEqual(expected, topic.results);
+    },
+    
+    'The each event provides the right information': function(topic) {
+      assert.equal(topic.each.length, 5);
+      assert.isNull(topic.each[0].err);
+      assert.isNull(topic.each[1].err);
+      assert.instanceOf(topic.each[2].err, Error);
+      assert.equal(topic.each[2].err.toString(), 'Error: The Error');
+      assert.isNull(topic.each[3].err);
+      assert.isNull(topic.each[4].err);
     }
 
   }
@@ -104,19 +127,32 @@ vows.describe('Asynchronous execution').addBatch({
   'Running with interrupt on error': {
 
     topic: function() {
-      var promise = new EventEmitter(),
-          order = [],
-          multi = new Multi(context, {parallel: false, interrupt: true});
+      
+      var order = [], each = [];
+      var promise = new EventEmitter();
+      var multi = new Multi(context, {parallel: false, interrupt: true});
+      
       multi.sum(1,2);
       multi.randSleep(order);
       multi.randSleep(order);
       multi.error(1); // Error happens here
       multi.sum(2,2);
       multi.sum(3,2);
-      multi.exec(function(err, results) {
-        promise.emit('success', {err: err, results: results, order: order});
+      
+      multi.on('each', function(err, i, args) {
+        each.push({
+          err: err,
+          counter: i,
+          args: args
+        });
       });
+      
+      multi.exec(function(err, results) {
+        promise.emit('success', {err: err, results: results, order: order, each: each});
+      });
+      
       return promise;
+
     },
 
     'Errors should be an array': function(topic) {
@@ -138,6 +174,13 @@ vows.describe('Asynchronous execution').addBatch({
     'Last element in Errors array should be the error': function(topic) {
       var err = [].concat(topic.err).pop();
       assert.isTrue(err instanceof Error && err.toString() == 'Error: The Error');
+    },
+    
+    'The each event provides the right information': function(topic) {
+      assert.equal(topic.each.length, 3);
+      assert.isNull(topic.each[0].err);
+      assert.isNull(topic.each[1].err);
+      assert.isNull(topic.each[2].err);
     }
 
   }
