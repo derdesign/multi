@@ -1,10 +1,10 @@
 
-var vows = require('vows'),
-    assert = require('assert'),
-    util = require('util'),
-    context = require('./fixtures/context'),
-    Multi = require('../'),
-    EventEmitter = require('events').EventEmitter;
+var vows = require('vows');
+var assert = require('assert');
+var util = require('util');
+var context = require('./fixtures/context');
+var Multi = require('../');
+var EventEmitter = require('events').EventEmitter;
     
 var sortFunc = function(a,b) { return a-b; }
     
@@ -48,7 +48,7 @@ vows.describe('Parallel Execution').addBatch({
     
     'Results are pushed in order of completion': function(topic) {
       var expectedOrder = [].concat(topic.order).sort(sortFunc);
-      assert.deepEqual(expectedOrder, topic.results);
+      assert.deepEqual(expectedOrder.sort(), topic.results.sort());
     }
     
   }
@@ -120,11 +120,11 @@ vows.describe('Parallel Execution').addBatch({
       var promise = new EventEmitter(),
           multi = new Multi(context, {parallel: true, interrupt: true});
       // Callbacks run simultaneously, but 3 & 2
-      multi.sleep(5);
-      multi.sleep(4);
-      multi.error(3); // Breaks here
-      multi.sleep(2); // Runs second
-      multi.sleep(1); // Runs first
+      multi.sleep(50);
+      multi.sleep(40);
+      multi.error(30); // Breaks here
+      multi.sleep(20); // Runs second
+      multi.sleep(10); // Runs first
       multi.exec(function(err, results) {
         promise.emit('success', {err: err, results: results})
       });
@@ -140,6 +140,7 @@ vows.describe('Parallel Execution').addBatch({
     },
     
     'Errors.length should match method calls until error': function(topic) {
+      if (topic.err.length !== 3) console.log(topic);
       assert.equal(topic.err.length, 3);
     },
     

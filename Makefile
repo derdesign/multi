@@ -1,12 +1,13 @@
 
 default:
-		@echo "\nmake deps       Install all required dependencies"
-		@echo "make test       Run the unit tests\n"
-
-deps:
-		@npm install
+		@echo; echo "Actions: test | lint | all"; echo
+		
+all: lint test
 
 test:
-		@./node_modules/vows/bin/vows --spec ./test/*.js
-
+		@./node_modules/.bin/vows --spec test/*.js
+      
+lint:
+		@./node_modules/.bin/jshint -c jshint.json lib/multi.js test/*.js test/fixtures/*.js
+		
 .PHONY: test

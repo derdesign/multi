@@ -1,10 +1,10 @@
 
-var vows = require('vows'),
-    assert = require('assert'),
-    util = require('util'),
-    context = require('./fixtures/context'),
-    Multi = require('../'),
-    EventEmitter = require('events').EventEmitter;
+var vows = require('vows');
+var assert = require('assert');
+var util = require('util');
+var context = require('./fixtures/context');
+var Multi = require('../');
+var EventEmitter = require('events').EventEmitter;
     
 vows.describe('Asynchronous execution').addBatch({
   
@@ -13,7 +13,7 @@ vows.describe('Asynchronous execution').addBatch({
     topic: function() {
       var promise = new EventEmitter(),
           order = [],
-          multi = new Multi(context, {parallel: false, interrupt: false});
+          multi = new Multi(context); // parallel: false, interrupt: false
       multi.randSleep(order);
       multi.randSleep(order);
       multi.randSleep(order);

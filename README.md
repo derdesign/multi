@@ -1,14 +1,16 @@
 # Multi [![Build Status](https://secure.travis-ci.org/derdesign/multi.png)](http://travis-ci.org/derdesign/multi)
 
-Run asynchronous methods sequentially or in parallel.
+Asynchronous execution library.
 
-## About
 
-Multi provides a mechanism to run callbacks asynchronously in sequence, or in parallel.
+## Features
 
-Execution can be interrupted if there is an error. After all callbacks have finished
-executing, the library will provide [err, results], containing the errors (null if none)
-and the respective results of the callbacks.
+- Run callbacks asynchronously in sequence or in parallel
+- Wraps around an object with asynchronous methods
+- Stops execution if error encountered
+- Reusable call stack if needed
+
+
 
 ## Installation
 
@@ -16,61 +18,66 @@ To install multi:
 
     npm install multi
 
-To install multi's dependencies:
+Install from git repository:
 
-    npm install
+    git clone https://github.com/derdesign/multi.git
     
-You can also install the dependencies with `make deps`.
-    
-To run the test suites:
+Running tests:
 
     make test
+
+
     
 ## Usage
 
-Multi works with objects that have asynchronous methods. It creates a wrapper with the same methods as the original,
-which can be run either in sequence or in parallel.
+Multi creates a wrapper object containing the same methods as the original object. The wrapped methods can then be run either
+in sequence or in parallel, by providing the proper options to the `Multi::exec` method.
 
-The following example wraps the `fs` module in a Multi object, and performs some operations:
+The following example wraps the `fs` module in a Multi object, to perform async file operations:
 
 ```javascript
-var fs = require('fs'),
-    Multi = require('multi');
+var fs = require('fs');
+var Multi = require('multi');
   
 var mfs = new Multi(fs);
 
-mfs.readFile('./assets/hello.html', 'utf-8');
-mfs.readdir('./assets/');
-mfs.readFile('./assets/style.css', 'utf-8');
-mfs.lstat('./assets/text.txt');
+mfs.readFile('assets/hello.html', 'utf-8');
+mfs.readdir('assets/');
+mfs.readFile('assets/style.css', 'utf-8');
+mfs.lstat('assets/text.txt');
 
 mfs.exec(function(err, results) {
-  console.log([err, results]);
+  console.log(err || results);
 });
 ```
 
-There are several examples provided on the various uses of Multi, available in the `examples/` directory.
+## API
 
-## Options
+### Multi(options)
+Multi constructor. Receives an options object. Available options are:
 
-The following options are accepted in the Multi configuration object (second parameter of constructor):
+- **parallel**: Determines if the methods will run in parallel. Defaults to `false`
 
-**parallel**: Determines if the methods will run in parallel. Defaults to `false`
+- **interrupt**: Interrupts execution if an error is encountered. Defaults to `false`
 
-**interrupt**: Interrupts execution if an error is encountered. Defaults to `false`
+- **flush**: Clears the call stack after running `exec`. Defaults to `true`
 
-**flush**: Clears the call stack after running `exec`. Defaults to `true`
+### multi.exec(callback)
+Runs the wrapper methods asynchronously using the configuration passed to the multi constructor. The callback has a
+signature of `(err, results)`. If an error occurs, `err` will be an array with the errors from the execution stack.
+
+The `results` object is an array containing the arguments provided to callbacks in the execution stack.
+
+
 
 ## Events
 
-Multi emits the following events:
+**pre_exec**: Emitted before running the call stack
 
-**pre_exec**: Before running the call stack
+**post_exec**: Emitted upon completion, before calling the `exec` callback
 
-**post_exec**: Upon completion, before calling the `exec` callback
+
 
 ## License
 
-Copyright &copy; 2012, Ernesto Méndez. (MIT License)
-
-See [LICENSE](https://github.com/derdesign/multi/blob/master/LICENSE) for more info.
+`multi` is [MIT Licensed](https://github.com/derdesign/multi/blob/master/LICENSE)
